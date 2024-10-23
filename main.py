@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import csv
 
 url="https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
 base_url="https://books.toscrape.com/"
@@ -29,25 +30,36 @@ def convert_string_in_number(stringNumber):
 
 def get_info_page_with_soup(soup):
     #Récupération des informations nécéssaire dans un dictionnaire
-    information_page={}
-    information_page['universal_product_code'] = get_text_in_array_information(soup, 'UPC')
-    information_page['title']=soup.select_one('.product_main h1').string.strip()
-    information_page['price_including_tax'] = get_text_in_array_information(soup, 'Price (incl. tax)')
-    information_page['price_excluding_tax'] = get_text_in_array_information(soup, 'Price (excl. tax)')
+    information_book={}
+    information_book['universal_product_code'] = get_text_in_array_information(soup, 'UPC')
+    information_book['title']=soup.select_one('.product_main h1').string.strip()
+    information_book['price_including_tax'] = get_text_in_array_information(soup, 'Price (incl. tax)')
+    information_book['price_excluding_tax'] = get_text_in_array_information(soup, 'Price (excl. tax)')
     
     #Garde uniquement les chiffres de la chaîne de caractére et les rassemble
-    information_page['number_avaible']=''.join(filter(str.isdigit, get_text_in_array_information(soup, 'Availability')))
+    information_book['number_avaible']=''.join(filter(str.isdigit, get_text_in_array_information(soup, 'Availability')))
     
-    information_page['product_description']= soup.select_one('#product_description + p').string
-    information_page['category']=soup.select('ul.breadcrumb li')[2].text.strip()
-    information_page['review_rating']=convert_string_in_number(soup.select_one('.star-rating').get('class')[1])
-    information_page['image_url']=base_url + soup.select_one('.carousel-inner div img').get('src').replace('../../', '')
+    information_book['product_description']= soup.select_one('#product_description + p').string
+    information_book['category']=soup.select('ul.breadcrumb li')[2].text.strip()
+    information_book['review_rating']=convert_string_in_number(soup.select_one('.star-rating').get('class')[1])
+    information_book['image_url']=base_url + soup.select_one('.carousel-inner div img').get('src').replace('../../', '')
     
-    return information_page
+    return information_book
 
+def generate_csv_file(dictionnaire):
     
     
+    with open('data.csv', 'w') as fichier_csv:
+        writer = csv.writer(fichier_csv, delimiter=',')
+        writer.writerow(dictionnaire.keys())
+        
+        writer.writerow(dictionnaire.values())
     
     
-soup = get_soup(url)
-get_info_page_with_soup(soup)
+def main():
+    soup = get_soup(url)
+    information_book = get_info_page_with_soup(soup)
+    generate_csv_file(information_book)
+
+if __name__ == "__main__":
+    main()
