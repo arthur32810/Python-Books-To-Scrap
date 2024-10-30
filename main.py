@@ -99,15 +99,13 @@ def get_category_pages(url_page_category):
 
 def get_categories_link(base_url):
     soup_page = get_soup(base_url)
+    links_categories = soup_page.select(".nav-list a")
     array_url_categories = []
 
-    for link_category in soup_page.select("nav nav-list a"):
-        print(link_category)
-        # array_url_book.append(
-        #     BASE_URL + "catalogue/" + link_book.get("href").replace("../", "")
-        # )
+    for link_category in links_categories:
+        array_url_categories.append(BASE_URL + link_category.get("href"))
 
-    # return array_url_book
+    return array_url_categories
 
 
 def main():
@@ -116,18 +114,17 @@ def main():
     first_iteration_book = True
     with open("data.csv", "w") as fichier_csv:
         writer = csv.writer(fichier_csv, delimiter=",")
-        for url_category_page in get_category_pages(
-            "https://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
-        ):
-            for url_book_page in get_books_link_in_page(url_category_page):
-                information_book = get_info_book(url_book_page)
-                if first_iteration_book:
-                    writer.writerow(information_book.keys())
-                    first_iteration_book = False
+        for url_category in get_categories_link(BASE_URL):
+            for url_category_page in get_category_pages(url_category):
+                for url_book_page in get_books_link_in_page(url_category_page):
+                    information_book = get_info_book(url_book_page)
+                    if first_iteration_book:
+                        writer.writerow(information_book.keys())
+                        first_iteration_book = False
 
-                writer.writerow(information_book.values())
+                    writer.writerow(information_book.values())
 
 
 if __name__ == "__main__":
     # main()
-    get_categories_link()
+    print(get_categories_link(BASE_URL))
