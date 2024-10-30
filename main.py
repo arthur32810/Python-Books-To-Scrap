@@ -78,7 +78,7 @@ def get_books_link_in_page(url_page):
     return array_url_book
 
 
-def get_categories_pages(url_page_category):
+def get_category_pages(url_page_category):
     # récupérer les différentes lien des pages categories
     soup_page = get_soup(url_page_category)
     text_pagination = soup_page.select_one(".pager .current")
@@ -97,13 +97,26 @@ def get_categories_pages(url_page_category):
     return array_link_page
 
 
+def get_categories_link(base_url):
+    soup_page = get_soup(base_url)
+    array_url_categories = []
+
+    for link_category in soup_page.select("nav nav-list a"):
+        print(link_category)
+        # array_url_book.append(
+        #     BASE_URL + "catalogue/" + link_book.get("href").replace("../", "")
+        # )
+
+    # return array_url_book
+
+
 def main():
 
     # permet de définir les entetes lors de la premiere iteration
     first_iteration_book = True
     with open("data.csv", "w") as fichier_csv:
         writer = csv.writer(fichier_csv, delimiter=",")
-        for url_category_page in get_categories_pages(
+        for url_category_page in get_category_pages(
             "https://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
         ):
             for url_book_page in get_books_link_in_page(url_category_page):
@@ -116,4 +129,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    get_categories_link()
