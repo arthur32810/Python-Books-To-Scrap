@@ -13,4 +13,6 @@ def create_folder_category(name_category):
     """Création d'un dossier par catégory grace au paquet os"""
     import os
 
-    os.mkdir(f"./data/{name_category}")
+    destination_path = "./data/" + name_category
+    if not os.path.isdir(destination_path):
+        os.mkdir(destination_path)
