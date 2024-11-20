@@ -1,3 +1,6 @@
+import os
+
+
 def get_image(url_image, upc_book, destination_path):
     """Téléchargement de l'image du livre"""
     import requests
@@ -9,9 +12,15 @@ def get_image(url_image, upc_book, destination_path):
         file.write(response.content)
 
 
+def create_data_folder():
+    """Création du dossier principal data"""
+
+    if not os.path.isdir("./data"):
+        os.mkdir("./data")
+
+
 def create_folder_category(name_category):
     """Création d'un dossier par catégory grace au paquet os"""
-    import os
 
     destination_path = "./data/" + name_category
     if not os.path.isdir(destination_path):

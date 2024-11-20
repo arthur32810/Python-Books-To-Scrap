@@ -1,6 +1,6 @@
 from booktoscrap.soup import get_soup
 from booktoscrap.constant import BASE_URL, STRING_TO_NUMBER
-from booktoscrap.download import get_image, create_folder_category
+from booktoscrap.download import get_image, create_folder_category, create_data_folder
 import csv
 
 
@@ -96,6 +96,7 @@ def main():
 
     # permet de définir les entetes lors de la premiere iteration
     first_iteration_book = True
+    create_data_folder()
 
     for url_category, category_name in get_categories_link(BASE_URL):
         create_folder_category(category_name)
