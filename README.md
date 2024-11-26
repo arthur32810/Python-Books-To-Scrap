@@ -8,7 +8,7 @@ Pour entrer dans l'environnement que nous venons de créer, entrer la commander 
 
 ## 3. Installer les dépendances du projet
 Pour installer les dépendances du projet il faut executer la commande suivante : 
-`pip -r install requirements.txt`
+`pip install -r requirements.txt`
 
-## 3. Executer le module
+## 4. Executer le module
 Une fois positionné dans l'environnement, vous pouvez executer le module grâce à la commande : `python -m booktoscrap`

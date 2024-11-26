@@ -106,6 +106,7 @@ def main():
 
             for url_category_page in get_category_pages(url_category):
                 for url_book_page in get_books_link_in_page(url_category_page):
+                    print(url_book_page)
                     information_book = get_info_book(url_book_page)
                     get_image(
                         information_book["image_url"],
