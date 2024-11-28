@@ -34,9 +34,10 @@ def get_info_book(url_book):
         filter(str.isdigit, get_text_in_array_information(soup, "Availability"))
     )
 
-    information_book["product_description"] = soup.select_one(
-        "#product_description + p"
-    ).string
+    product_description = soup.select_one("#product_description + p")
+    information_book["product_description"] = (
+        product_description.string if product_description else ""
+    )
 
     information_book["category"] = soup.select("ul.breadcrumb li")[2].text.strip()
 
@@ -94,20 +95,23 @@ def get_categories_link(base_url):
 
 def main():
 
-    # permet de définir les entetes lors de la premiere iteration
-    first_iteration_book = True
     create_data_folder()
 
     for url_category, category_name in get_categories_link(BASE_URL):
         create_folder_category(category_name)
 
+        # permet de définir les entetes lors de la premiere iteration
+        first_iteration_book = True
+
         with open(f"./data/{category_name}/{category_name}.csv", "w") as fichier_csv:
             writer = csv.writer(fichier_csv, delimiter=",")
 
             for url_category_page in get_category_pages(url_category):
+
                 for url_book_page in get_books_link_in_page(url_category_page):
-                    print(url_book_page)
+
                     information_book = get_info_book(url_book_page)
+
                     get_image(
                         information_book["image_url"],
                         information_book["universal_product_code"],
